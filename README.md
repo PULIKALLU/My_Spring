@@ -448,6 +448,24 @@ orderDao.deleteOrder(order); // deleting order deletes all its items also
 
 ======================
 
+http://databaseanswers.org/data_models/
+http://databaseanswers.org/data_models/agile_retail_sales/index.htm
+
+
+Task:
+
+http://databaseanswers.org/data_models/car_hire/index.htm
+
+Entites
+Booking.java
+Customer.java
+Vehicle.java
+
+===================
+
+
+
+
 
 
 
