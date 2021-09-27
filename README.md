@@ -264,7 +264,38 @@ FirstExample ==> Run As ==> Run Configurations
 Arguments : VM Arguments
 -Dspring.profiles.active=dev
 
-============
+======================
+When to use @Bean
+
+* Spring uses default constructor for creating instances of bean.
+* to create instances of classes which are provided by 3rd party libraries
+
+==============
+
+@Repository
+@Service
+@Autowired
+@Qualifier
+@Primary
+@Profile
+@Configuration
+@Bean
+
+
+================
+
+MySQL as RDBMS
+
+ORM ==> Object Relational Mapping
+
+ORM frameworks: Hibernate, TopLink, KODO, OpenJPA, EclipseLink, JDO
+
+JPA ==> Java Persistence API is a specification for ORM frameworks
+
+
+
+
+
 
 
 
