@@ -50,4 +50,140 @@ bash terminal> mysql -u "root" -p
 
 mysql> exit
 
-===========
+=============================================================================
+
+Day 1
+
+-------
+
+Spring Framework:
+
+Lightweight Container for building enterprise applications.
+
+
+containers are layers on JVM.
+
+Spring provids Dependency Injection and Life Cycle Management with its Core container.
+
+What is DI?
+
+Spring Core Module provides Dependency Injection.
+
+Modules provided by Spring:
+1) Core Module
+2) JDBC ==> Simpilify using JDBC
+3) ORM ==> using Spring with ORM frameworks like Hibernate, TopLink, OpenJPA, EclipseLink
+4) Web ==> simplifies building web application development [ Traditional or RESTful or GraphQL]
+5) Transaction ==> simplifies transaction managment
+6) AOP ==> Aspect Oriented Programming
+....
+
+Spring uses metadata to manage lifecycle of beans and wiring of beans
+
+// entity class / Domain / Model
+public class Employee {
+	fields / getters / setters
+}
+
+public interface EmployeeDao {
+	public void addEmployee(Employee e);
+}
+
+public class EmployeeDaoFileImpl implements EmployeeDao {
+	public void addEmployee(Employee e) {
+		...
+	}	
+}
+
+public class EmployeeDaoJdbcImpl implements EmployeeDao {
+	public void addEmployee(Employee e) {
+		...
+	}
+}
+
+
+public class AppService {
+	private EmployeeDao empDao; // dependency
+
+	public void setEmpDao(EmployeeDao dao) {
+		this.empDao = dao;
+	}
+
+	public void insert(Employee e) {
+		empDao.addEmployee(e);
+	}
+}
+
+
+XML as Metadata:
+
+<bean id="jdbcImpl" class="pkg.EmployeeDaoJdbcImpl" />
+
+<bean id="fileImpl" class="pkg.EmployeeDaoFileImpl" />
+
+<bean id="appService" class="pkg.AppService">
+	<property name="empDao" ref="fileImpl" />
+</bean>
+
+
+
+=======================
+
+Java 1.5 version introduced Annotations
+
+Spring Framework creates beans which has one of these annotations at classlevel.
+
+1) @Component
+2) @Repository
+3) @Service
+4) @Configuration
+5) @Controller
+6) @RestController
+
+https://github.com/spring-projects/spring-framework/blob/main/spring-jdbc/src/main/resources/org/springframework/jdbc/support/sql-error-codes.xml
+
+public interface EmployeeDao {
+	public void addEmployee(Employee e);
+}
+
+@Repository
+public class EmployeeDaoFileImpl implements EmployeeDao {
+	public void addEmployee(Employee e) {
+		...
+	}	
+}
+
+@Service
+public class AppService {
+	@Autowired
+	private EmployeeDao empDao; // dependency
+
+ 	public void insert(Employee e) {
+		empDao.addEmployee(e);
+	}
+}
+
+
+==
+
+try {
+	.. code ...
+} catch(SQLException ex) {
+	if(ex.getErrorCode() == 1) {
+		thrown new DataAcessException("Duplicate key")
+	} 
+}
+
+
+@Repository
+public class EmployeeDaoJdbcImpl implements EmployeeDao {
+	public void addEmployee(Employee e) {
+		...
+	}	
+}
+
+=============
+
+Creating a Spring Container:
+
+1) ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
