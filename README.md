@@ -391,3 +391,18 @@ If any exception occurs in this method and not caught the rollback else commit
 
 ===========================================
 
+
+CustomerDao and Impl class
+ ==> add customer
+ ==> get Customer by last name ==> JPQL ==> from Customer where lastName = 'Raj'
+
+===
+
+
+* @JoinColumn(name = "customer_fk")
+
+=> with @ManyToOne() will introduce foreign key in owning table [ orders]
+=> with OneToMany will introduce foreign key in child table
+
+
+
