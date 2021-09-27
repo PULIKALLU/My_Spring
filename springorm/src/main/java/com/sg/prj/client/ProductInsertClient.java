@@ -15,7 +15,7 @@ public class ProductInsertClient {
 		ctx.refresh();
 		OrderService service = ctx.getBean("orderService", OrderService.class);
 		
-		addProducts(service);
+//		addProducts(service);
 		
 		getProducts(service);
 	}

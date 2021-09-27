@@ -17,6 +17,8 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 @Configuration
 @EnableTransactionManagement
 public class AppConfig {
+	
+	// pool of database connections
 	@Bean
 	public DataSource dataSource() throws Exception{
 		ComboPooledDataSource cpds = new ComboPooledDataSource();

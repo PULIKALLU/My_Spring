@@ -324,4 +324,70 @@ props.setProperty("hibernate.hbm2ddl.auto", "create");
 
 ==========================
 
- 
+props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
+
+em.persist(p); ==>   ORM should generate SQL for MySQL8
+
+
+===
+
+Local-Mysql client:
+
+terminal> docker exec -it local-mysql bash
+
+# mysql -u "root" -p
+Enter Password: Welcome123
+
+=====
+
+Transaction Management:
+
+Programatic Transaction:
+
+* JDBC
+
+public void transferFunds(Account fromAcc, Account toAcc, double amt) {
+	Connection con = null;
+	try {
+		con = DriverManger.getConnection(URL, USER, PWD);
+		con.setAutoCommit(false); // transaction begins
+			PreparedStatement ps1 == > update "fromAcc"
+			PreparedSteament ps2 ==> update "toAcc"
+			PreparedStatement ps3 ==> insert into daily_trnsactions table
+
+			set IN parameters for ps1, ps2, ps3;
+			exceuteUPdate() on ps1, ps2 and ps3
+		con.commit();
+	} catch(SQLExceptione ex) {
+		con.rollback();
+	} finally {
+		con.close();
+	}
+
+}
+
+* JPA
+
+public void transferFunds(Account fromAcc, Account toAcc, double amt) {
+	try {
+	Transaction tx = em.beginTransaction();
+		em.merge(fromAcc);
+		em.merge(toAcc);
+		em.persist(transaction);
+	tx.commit();
+  }catch(Exception ex) {
+  	tx.rollback();
+  }
+
+ ====
+
+ With Declarative Transaction just add @Transactional on method irrespective of JPA / JDBC / JTA / ...
+
+@Transactional
+public void transferFunds(Account fromAcc, Account toAcc, double amt) {
+}
+
+If any exception occurs in this method and not caught the rollback else commit
+
+===========================================
+
