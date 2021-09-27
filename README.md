@@ -293,9 +293,35 @@ ORM frameworks: Hibernate, TopLink, KODO, OpenJPA, EclipseLink, JDO
 JPA ==> Java Persistence API is a specification for ORM frameworks
 
 
+=================
+
+<dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <version>1.4.200</version>
+ </dependency>
 
 
 
+====
 
+props.setProperty("hibernate.hbm2ddl.auto", "update");
 
+hbm ==> Hibernate Mapping
+DDL ==> Data Definition Language ==> CREATE , ALTER and DROP
 
+1) update
+* create table if doesn't exist
+* use existing table if present
+* alter table if required
+
+props.setProperty("hibernate.hbm2ddl.auto", "create");
+2) create
+* drop tables and re-create every run of application
+
+3) validate
+* use tables as present in backend if it matches; if it doesn't match throw error
+
+==========================
+
+ 
