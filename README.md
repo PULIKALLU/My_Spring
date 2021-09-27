@@ -404,5 +404,50 @@ CustomerDao and Impl class
 => with @ManyToOne() will introduce foreign key in owning table [ orders]
 => with OneToMany will introduce foreign key in child table
 
+=========
+
+
+@Entity
+@Table(name="orders")
+public class Order {
+	
+	@OneToMany()
+	@JoinColumn(name="order_fk") 
+	private List<Item> items = new ArrayList<>();
+
+Suppose if 1 order has 5 items ==> 6 CALLS TO database
+orderDao.persist(order); // saves into orders table
+
+for(Item item: order.getItems()) {
+	itemDao.persist(item); // 5 calls to items table
+}
+
+
+=========
+With Cascade
+
+
+@Entity
+@Table(name="orders")
+public class Order {
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="order_fk") 
+	private List<Item> items = new ArrayList<>();
+
+
+Suppose if 1 order has 50 items ==>  1 call
+
+orderDao.persist(order); // saves into orders table
+saving order saves all its items;
+
+--
+Similary 
+
+orderDao.deleteOrder(order); // deleting order deletes all its items also
+
+======================
+
+
 
 
