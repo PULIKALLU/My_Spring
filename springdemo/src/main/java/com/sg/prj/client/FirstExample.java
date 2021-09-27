@@ -19,6 +19,7 @@ public class FirstExample {
 		service.insertEmployee(e);
 		
 		System.out.println("********");
+		
 		String[] names = ctx.getBeanDefinitionNames();
 		for(String name : names) {
 			System.out.println(name);

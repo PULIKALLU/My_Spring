@@ -6,12 +6,12 @@ import org.springframework.stereotype.Repository;
 import com.sg.prj.entity.Employee;
 
 @Repository
-@Profile("prod")
-public class EmployeeDaoJdbcImpl implements EmployeeDao {
+@Profile("dev")
+public class EmployeeDaoFileImpl implements EmployeeDao {
 
 	@Override
 	public void addEmployee(Employee e) {
-		System.out.println("stored in database !!!");
+		System.out.println("file store!!!");
 	}
 
 }

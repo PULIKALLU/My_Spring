@@ -187,3 +187,84 @@ public class EmployeeDaoJdbcImpl implements EmployeeDao {
 Creating a Spring Container:
 
 1) ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
+
+2) ApplicationContext ctx = new FileSystemXmlApplicationContext("/users/nameofuser/beans.xml");
+
+Spring Container using Annotations:
+
+3) AnnotationConfigApplicationContext = AnnotationConfigApplicationContext();
+
+=========
+pom.xml
+
+1) com.sg.prj.entity;
+ public class Employee
+
+2) com.sg.prj.dao;
+EmployeeDao.java
+EmployeeDaoJdbcImpl.java
+
+3) com.sg.prj.service;
+AppService.java
+
+4) com.sg.prj.client
+FirstExample.java
+
+
+======
+ 
+When more than one bean implements the same interface and when @Autowired we get:
+NoUniqueBeanDefinitionException: No qualifying bean of type 'com.sg.prj.dao.EmployeeDao' available: expected single matching bean but found 2: employeeDaoFileImpl,employeeDaoJdbcImpl
+
+1) Solution 1:
+Mark one of the implmentation with @Primary
+
+@Repository
+@Primary
+public class EmployeeDaoFileImpl implements EmployeeDao {
+
+...
+
+@Repository
+public class EmployeeDaoJdbcImpl implements EmployeeDao {
+
+
+2) Solution 2: 
+Don't use @Primary instead use @Qualifier while @Autowired
+
+
+@Service
+public class AppService {
+	@Autowired
+	@Qualifier("employeeDaoJdbcImpl")
+	private EmployeeDao empDao;
+	
+---
+
+3) Solution 3: using profile ; Most recommended solution
+
+
+@Repository
+@Profile("prod")
+public class EmployeeDaoJdbcImpl implements EmployeeDao {
+
+
+@Repository
+@Profile("dev")
+public class EmployeeDaoFileImpl implements EmployeeDao {
+
+
+@Service
+public class AppService {
+	@Autowired
+	private EmployeeDao empDao;
+
+FirstExample ==> Run As ==> Run Configurations
+
+Arguments : VM Arguments
+-Dspring.profiles.active=dev
+
+============
+
+
+
