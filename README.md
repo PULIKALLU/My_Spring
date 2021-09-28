@@ -574,3 +574,52 @@ H2 Inmemory
 
 ============================
 
+By default OneToMany Mapping is LAZY loading
+and ManyToOne is EAGER loading
+
+================================================================
+
+* Core Module
+* Transaction Module helps declartive trasnaction @Transactional
+* Spring ORM module to integrate with ORM frameworks like Hibernate
+* Spring Web MVC module
+
+
+Traditional Web application development using Spring MVC
+
+Model View Controller
+
+
+@Controller
+public class ProductController {
+	@Autowired 
+	private OrderService service;
+
+	@RequestMapping("getProducts.do") 
+	public ModelAndView getProducts() {
+		ModelAndView mav = new ..
+		mav.addObject("products", service.getProducts());
+		mav.setViewName("print.jsp");
+	}	
+}
+
+===================
+
+Run As ==> Maven Build ==> Goals ==>
+jetty:run
+
+==========================
+
+mvn clean install
+
+mvn jetty:run
+
+==================
+
+
+
+
+
+
+
+

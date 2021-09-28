@@ -1,0 +1,17 @@
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\cfg\AppConfig.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\dao\CustomerDaoJpaImpl.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\dao\ProductDao.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\dao\ProductDaoJpaImpl.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\dao\OrderDao.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\entity\Item.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\cfg\AppInitializer.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\client\OrderClient.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\client\ProductInsertClient.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\dao\OrderDaoJpaImpl.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\service\OrderService.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\web\ProductController.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\client\OrderFetchClient.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\dao\CustomerDao.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\entity\Product.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\entity\Order.java
+C:\Trainings WS\SG\SPRING\springorm\src\main\java\com\sg\prj\entity\Customer.java

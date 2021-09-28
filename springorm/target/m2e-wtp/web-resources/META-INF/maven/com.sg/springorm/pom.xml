@@ -5,6 +5,7 @@
 	<groupId>com.sg</groupId>
 	<artifactId>springorm</artifactId>
 	<version>1.0.0</version>
+	<packaging>war</packaging>
 	<properties>
 		<!-- Generic properties -->
 		<java.version>1.8</java.version>
