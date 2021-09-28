@@ -463,9 +463,114 @@ Vehicle.java
 
 ===================
 
+ 
+
+Bug Report / Tickets
+
+Projects and Employee:
+
+@Entity
+@Table(name="employees") 
+public class Employee {
+	@Id
+	private String email;
+
+	private String name;
+
+}
 
 
 
+@Entity
+@Table(name="clients") 
+public class Client {
+	@Id
+	@GeneratedValue(..)
+	private int id;
+
+	private String name;
+
+}
 
 
+
+@Entity
+@Table(name="projects") 
+public class Project {
+	@Id
+	@GeneratedValue(..)
+	private int id;
+
+	private String name;
+
+	@Column(name="start_date")
+	private Date startDate = new Date();
+
+	@Column(name="end_date")
+	private Date endDate = new Date();
+
+	@ManyToOne
+	@JoinColumn(name="client_fk")
+	private Client client;
+}	
+
+
+==
+
+
+@Entity
+@Table(name="projects_employees") 
+public class ProjectEmployee {
+	@Id
+	@GeneratedValue(..)
+	private int id;
+
+	@ManyToOne
+	@JoinColumn(name="pid_fk")
+	private Project project;
+
+	@ManyToOne
+	@JoinColumn(name="emp_fk")
+	private Employee employee;
+
+	@Column(name="start_date")
+	private Date startDate = new Date();
+
+	@Column(name="end_date")
+	private Date endDate = new Date();
+
+	private String role;
+
+}
+
+==========
+
+Day 2
+
+no need for ItemDao ==> Items are managed by Order using Cascade
+
+Client places an order:
+Rquirement: Customer and Products should exist
+
+Order
+	Customer ==> email
+	Items
+		1) Product [ id ], qty
+		2) Product [ id ], qty
+		3) Product [ id ], qty
+
+In the backend:
+* compute amount for item [ product price * Qty + tax - discount]
+* compute total of order [ sum(items amount) + GST ]
+* Once product is purchased; should reduce the quantity of product in inventory
+
+
+===
+
+H2 Inmemory
+1) Products should be added
+2) Customer should be added
+2) execute OrderClient
+
+============================
 

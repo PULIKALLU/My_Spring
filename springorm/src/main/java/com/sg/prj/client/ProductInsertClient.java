@@ -17,7 +17,7 @@ public class ProductInsertClient {
 		
 //		addProducts(service);
 		
-		getProducts(service);
+//		getProducts(service);
 	}
 	
 	private static void addProducts(OrderService service) {
