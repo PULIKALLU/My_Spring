@@ -2,10 +2,14 @@ package com.sg.prj.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sg.prj.dao.CustomerDao;
 import com.sg.prj.dao.ProductDao;
+import com.sg.prj.entity.Customer;
 import com.sg.prj.entity.Product;
 
 @Service
@@ -13,6 +17,21 @@ public class OrderService {
 	@Autowired
 	private ProductDao productDao;
 	
+	@Autowired
+ 	private CustomerDao customerDao;
+
+ 	public Customer addCustomer(Customer c) {
+ 		return customerDao.save(c);
+ 	}
+
+ 	public List<Customer> getCustomers() {
+ 		return customerDao.findAll();
+ 	}
+ 	
+ 	public Customer getCustomerByEmail(String email) {
+ 		return customerDao.findById(email).orElseThrow();
+ 	}
+ 	
 	public List<Product> getProducts() {
 		return productDao.findAll();
 	}
@@ -23,5 +42,23 @@ public class OrderService {
 	
 	public Product addProduct(Product p) {
 		return productDao.save(p);
+	}
+
+	@Transactional
+	public void testLazy() {
+//		Product p = productDao.findById(1).orElse(null);
+		Product p = productDao.getById(1);
+		System.out.println("Has it hit DB!!!");
+//		System.out.println(p.getName());
+	}
+	
+	public List<Product> byRange(double low, double high) {
+		return productDao.getByRange(low, high);
+	}
+	
+	@Transactional
+	public Product updateProduct(double price, int id) {
+		productDao.updateProduct(price, id);
+		return productDao.findById(id).orElseThrow();
 	}
 }

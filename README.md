@@ -702,3 +702,62 @@ If we create interfaces extends JpaRepositroy; spring data jpa creates @Reposito
 H2 Console:
 
 http://localhost:8080/h2console/
+
+===
+entities are copied from previous project
+
+ProductDao.java
+
+OrderService.java
+
+OrderappApplication.java
+
+==================================
+
+Try this:
+
+CustomerDao.java interface
+
+OrderService
+@Autowired
+CustomerDao customerDao;
+
+* add Customer
+* get Customers
+
+=======================
+ 
+ public interface CustomerDao extends JpaRepository<Customer,String> {
+
+ }
+
+ @Service
+ public class OrderService {
+ 	@Autowired
+ 	private CustomerDao customerDao;
+
+ 	public Customer addCustomer(Customer c) {
+ 		return customerDao.save(c);
+ 	}
+
+ 	public List<Customer> getCustomers() {
+ 		return customerDao.findAll();
+ 	}
+ }
+
+==========
+
+Product p = productDao.getById(2); ==> returns a Proxy object ; not actual content; no hit to DB
+
+
+System.out.println(p.getName()); // hits the DB and populates the Product; But connection to DB is required
+
+=============
+
+JDBC
+exeuteQuery("select")
+exeuteUpdate("insert / delete / update")
+
+
+
+
