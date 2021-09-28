@@ -618,8 +618,87 @@ mvn jetty:run
 
 
 
+index.jsp
+form.jsp
+print.jsp
+
+ProductController.java
+
+
+======================================
+
+Spring Boot
+
+Eclipse ==> Help ==> Eclipse Market Place ==> Search:  STS ==> GO
+and select Spring Tools 3 or 4
+Spring tools 3.9.14.RELEASE
+
+=============================================
+
+
+Spring Boot
+a framework as a layer on Spring Framework
+
+Why Spring Boot?
+* Many configurations comes out of the box
+* Application development is very easy
+* Makes the application containerizable
+
+--
+
+* Spring boot is highly opiniated framework
+1) If we build ORM based application; Spring boot out of box gives you HikariCP database connection pool; 
+Configures Hibernate as the ORM framework; enables declarative Transactions
+* simply put AppConfig.java is not required
+
+2) For web application development; it configures DispatcherServlet to handle "*" url-pattern
+* Provides JSON HttpMessageHandlers ==> ContentNegotiationHandlers Java <--> 
+* Configures Embedded Tomcat Server
+==> Not Required AppInitializer.java and "jetty plugin in pom.xml"
+
+==> Run applciation with main() method ==> it starts Tomcat server
+
+
+====================
+
+Spring Boot application:
+1) new Spring-starter-project
+2) add "mysql" , "Spring data jpa", and "spring web"
+
+-----------------------
 
 
 
+@SpringBootApplication
+public class OrderappApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(OrderappApplication.class, args);
+	}
+
+}
 
 
+
+@SpringBootApplication is 3 in one:
+1) @ComponentScan
+will scan all classes from "com.sg" and sub-packages for @component, @Repository, @Service, @Controller,@RestController,@Configuration and creates instances of these classes
+
+2) @EnableAutoConfiguration
+this creates beans which are a part of "jar" files like auto configure of HikariCP, EntityManager, ...
+
+3) @Configuration
+
+
+SpringApplication.run() creates Spring Container
+
+===
+
+Spring Data JPA has built-in interfaces like JpaRepository
+
+If we create interfaces extends JpaRepositroy; spring data jpa creates @Repository classes with std. methods
+
+
+H2 Console:
+
+http://localhost:8080/h2console/

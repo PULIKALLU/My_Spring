@@ -1,5 +1,7 @@
 package com.sg.prj.web;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +37,18 @@ public class ProductController {
 		ModelAndView mav = new ModelAndView();
 		service.addProduct(product);
 		mav.addObject("msg", "Product added!!!");
-		mav.setViewName("index.jsp");
+		mav.setViewName("redirect:index.jsp");
 		return mav;
 	}
+	
+//	@RequestMapping("addProduct.do")
+//	public ModelAndView addProductDirect(HttpServletRequest req){
+//		Product product = new Product();
+//		product.setName(req.getParameter("name"));
+//		ModelAndView mav = new ModelAndView();
+//		service.addProduct(product);
+//		mav.addObject("msg", "Product added!!!");
+//		mav.setViewName("index.jsp");
+//		return mav;
+//	}
 }
