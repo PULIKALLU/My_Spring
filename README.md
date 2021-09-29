@@ -1079,7 +1079,49 @@ Validation failed for argument [0] in public org.springframework.http.ResponseEn
 	default message [Price 0.0 should be more than 10]] ]
 
 ========
+1) ReportDTO.java
 
+2) OrderDao.java
+
+public interface OrderDao extends JpaRepository<Order, Integer>{
+	@Query("select new com.sg.prj.dto.ReportDTO(o.orderDate, o.total, c.email, c.firstName, c.lastName) "
+			+ " from Order o inner join o.customer c")
+	List<ReportDTO> getReport();
+}
+
+
+3) OrderService.java
+public List<ReportDTO> getReports() {
+		return orderDao.getReport();
+	}
+
+4) OrderController.java
+	@GetMapping("/report")
+	public @ResponseBody List<ReportDTO> getReports() {
+			return service.getReports();
+	}
+http://localhost:8080/api/orders/report
+
+======
+
+RestTemplate is to consume REST API
+
+========================================
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+Unit testing RestControllers
+
+AAA ==> Assemble Action and Assert
+
+* JUnit is used Unit testing framework [ TestNG]
+* Mockito as mocking framework [ EasyMock / JMock ]
+* Hamcrest ==> good matchers for assertion
+* jsonpath ==> validating JSON [https://jsonpath.com/]
 
 
 

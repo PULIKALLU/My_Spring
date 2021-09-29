@@ -6,6 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import com.sg.prj.entity.Customer;
 import com.sg.prj.entity.Product;
@@ -13,9 +19,43 @@ import com.sg.prj.service.OrderService;
 
 @SpringBootApplication
 public class OrderappApplication implements CommandLineRunner {
+	
 	@Autowired
 	private OrderService service;
 	
+	/*
+	@Autowired
+	private RestTemplate template;
+	
+	@Bean
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+		return builder.build();
+	}
+	
+	private  void getUsers() {
+		String uri = "https://jsonplaceholder.typicode.com/users";
+		String result = template.getForObject(uri, String.class);
+		System.out.println(result);
+	}
+
+	private void getProductsTemplate() {
+		ResponseEntity<List<Product>> response = template.exchange("http://localhost:8080/api/products",
+				HttpMethod.GET, null , new ParameterizedTypeReference<List<Product>>() {
+				});
+		List<Product> products = response.getBody();
+		for(Product p : products) {
+			System.out.println(p.getName());
+		}
+	}
+	
+	private void addUsingRestTemplate() {
+		Product p = new Product(0, "Konfo", 80000.00, 100);
+		ResponseEntity<Product> resp = 
+				template.postForEntity("http://localhost:8080/api/products", p, Product.class);
+		System.out.println(resp.getBody().getId());
+		System.out.println(resp.getStatusCodeValue());
+	}
+	*/
 	public static void main(String[] args) {
 		SpringApplication.run(OrderappApplication.class, args);
 	}
@@ -23,6 +63,9 @@ public class OrderappApplication implements CommandLineRunner {
 	// this method gets called once Spring container is created and initialized
 	@Override
 	public void run(String... args) throws Exception {
+//		getUsers();
+//		getProductsTemplate();
+//		addUsingRestTemplate();
 //		System.out.println("******  Add Product **********");
 //		addProduct();
 //		System.out.println("******  Get Products **********");
@@ -35,6 +78,7 @@ public class OrderappApplication implements CommandLineRunner {
 //		customQuery();
 //		modify();
 	}
+
 
 	private void modify() {
 		Product p = service.updateProduct(999, 5);
