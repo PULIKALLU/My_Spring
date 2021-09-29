@@ -983,8 +983,74 @@ body:
 	]
 }
 
+==========
 
 
+AOP
+Aspect Oriented Programing
+
+Cross-cutting concerns which leads to code tangling and code scattering
+
+
+public void transferFunds(...) {
+	try {
+	if(securityContext.getAuthorities(). equals("CUSTOMER")) {
+		logger.debug("begin transaction");
+		Tranasaction tx = em.beginTransaction();
+		em.merge(acc1);
+		logger.debug("account 1 updated!!");
+		em.merge(acc2);
+		logger.debug("account 2 updated!!");
+		..
+		tx.commit();
+	}
+	}catch(Exception ex) {
+		tx.rollback();
+	}
+}
+
+AOP Terminology:
+
+Aspect:  Cross - cutting concern; bit of code which is not a part of main logic; but can be used along with main logic ==> Logging, Security, Profile, Transaction
+
+JoinPoint: is a point in application where AOP aspect can be weaved. [Methods and Exception]
+
+Pointcut: selected JoinPoint
+
+Advice: before, after, after-returning, after-throwing, around
+
+=========================
+
+
+@Transactional is a Around Adice
+
+@Aspect
+public TransactionalAspect {
+	@Around("execution(* com.sg.prj.service.*.*(..))")
+	public Object doProfile(ProceedingJoinPoint pjp) throws Throwable {
+		try {
+			Transaction tx = em.beginTransaction();
+			Object ret = pjp.proceed();
+			tx.commit();
+		} catch(Exception ex) {
+			tx.rollback();
+			return ex;
+		}
+		return ret;
+	}
+}
+
+======================
+
+AOP:
+https://docs.spring.io/spring-framework/docs/2.0.x/reference/aop.html
+Limitiation: No Dynamic PointCuts
+
+================
+
+@ControllerAdvice
+	catchs Exceptions thrown from @Controller or @RestController
+	==> handle it and write custom messages to client
 
 
 

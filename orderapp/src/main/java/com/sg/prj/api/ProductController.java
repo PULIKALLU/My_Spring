@@ -1,6 +1,7 @@
 package com.sg.prj.api;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,8 +46,12 @@ public class ProductController {
 	// "3" is taken as PathVariable
 	@GetMapping("/{pid}")
 	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody Product getProduct(@PathVariable("pid") int id) {
-		return service.getProduct(id);
+	public @ResponseBody Product getProduct(@PathVariable("pid") int id) throws NotFoundException {
+		try {
+			return service.getProduct(id);
+		} catch (NoSuchElementException e) {
+			throw new NotFoundException("Product with " + id + " doesn't exist!!!");
+		}
 	}
 
 	// POST
