@@ -3,6 +3,8 @@ package com.sg.prj.api;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +60,7 @@ public class ProductController {
 	// http://localhost:8080/api/products
 	// payload [json/xml] is sent from client ==> converted to Product @RequestBody
 	@PostMapping()
-	public ResponseEntity<Product> addProduct(@RequestBody Product p) {
+	public ResponseEntity<Product> addProduct(@RequestBody @Valid Product p) {
 		service.addProduct(p);
 		return new ResponseEntity<Product>(p, HttpStatus.CREATED);
 	}

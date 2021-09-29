@@ -1052,5 +1052,39 @@ Limitiation: No Dynamic PointCuts
 	catchs Exceptions thrown from @Controller or @RestController
 	==> handle it and write custom messages to client
 
+===
+
+NotFoundException.java
+GlobalExceptionHandler.java
+ProductController.java
+LogAspect.java
+
+=========
+
+	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+	</dependency>
+=========================
+
+MethodArgumentNotValidException: 
+
+Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.sg.prj.entity.Product> com.sg.prj.api.ProductController.addProduct(com.sg.prj.entity.Product) with 3 errors: 
+	[Field error in object 'product' on field 'name': rejected value []; codes [NotBlank.product.name,NotBlank.name,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [product.name,name]; arguments []; default message [name]]; default message [Name is required]] 
+
+	[Field error in object 'product' on field 'quantity': rejected value [-12]; codes [Min.product.quantity,Min.quantity,Min.int,Min]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [product.quantity,quantity]; arguments []; default message [quantity],0]; 
+	default message [Quantity -12 should be more than 0]] 
+
+	[Field error in object 'product' on field 'price': rejected value [0.0]; codes [Min.product.price,Min.price,Min.double,Min]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [product.price,price]; arguments []; default message [price],10]; 
+	default message [Price 0.0 should be more than 10]] ]
+
+========
+
+
+
+
+
+
+
 
 
