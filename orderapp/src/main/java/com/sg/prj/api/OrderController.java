@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sg.prj.dto.ReportDTO;
 import com.sg.prj.entity.Order;
 import com.sg.prj.service.OrderService;
 
@@ -33,4 +34,8 @@ public class OrderController {
 		 return "order placed!!!";
 	}
 	
+	@GetMapping("/report")
+	public @ResponseBody List<ReportDTO> getReports() {
+			return service.getReports();
+	}
 }
