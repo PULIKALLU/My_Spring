@@ -760,4 +760,231 @@ exeuteUpdate("insert / delete / update")
 
 
 
+===============
+
+
+Day 3
+
+CRUD operations are performed on Customer, Product and Order
+CustomerDao
+ProductDao
+OrderDao
+
+Item is completeley managed by Order itself ==> Cascade
+
+ItemDao is not required
+
+
+===============
+
+Spring Starter Project
+added dependecnies:
+mysql/h2, jpa, web
+
+Using Spring Data JPA dependencies:
+* Spring boot creates datasource [ pool of database connections ] using info present in "application.properties" file
+* Creates EntityManagerFactory using Hibernate and HikariCP
+* Enables transaction management
+
+
+Using Web dependecies:
+* configures DispatcherServlet to accept all requests "*"
+* configures Jackson library for Java <---> JSON; HttpMessageConverter
+* bridges Servlet Container with Spring container
+
+java/ JSON conversion following libraries are available:
+1) jackson
+2) jettison
+3) gson
+4) moxy
+
+=================
+
+Spring Data JPA
+* we just create interfaces extends JpaRepository
+* this repositroy has most of the common methods for CRUD operations
+* Spring DATA JPA creates @Repository class using this interface
+* Allows to create custom queries using @Query()
+
+==================================================================
+
+RESTful Web Services using Spring Boot
+
+REST ==> REpresentational State Transfer
+
+* Resource resides on server [ database / files / images/ printers]
+* State of Resource at any given point is representation in various forms like XML / JSON / CSV / RSS / HTML
+
+Representation is served to the client in various formats based on HTTP headers sent by client.
+
+Accept: application/json
+
+Accept: text/xml
+
+
+Alternatives to RESTful Web services:
+1) SOAP
+2) GraphQL
+3) Protobuf
+4) Apache Thrift
+5) IIOP
+
+======================
+
+Characterstics of RESTful Web Services
+1) Client - Server
+seperate the concerns of client and server; make it scalable; heterogenous
+Traditional web application contains client and server techonlogies deployed on a single server;==> not scalable
+
+2) Stateless
+	* JWT
+
+3) Cacheable
+  * Cache on client or middle tier [ Redis ]
+
+4) Layered
+
+
+=================
+
+RESTful Web services uses 
+ "plural nouns" to identify resources
+ "HTTP verbs" for actions [ GET, POST, PUT, DELETE]
+
+GET needs HTTP header
+Accept: application/json
+
+Examples:
+1) GET
+  http://localhost:8080/api/products
+
+  get all products 
+
+2) GET
+  http://localhost:8080/api/products/3
+
+  get a product whose id is "3"
+
+  use "pathparameter [ / ]" for fetching by PRIMARY KEY or to get child data
+
+  GET
+  http://localhost:8080/api/customers/banu@gmail.com/orders
+
+  get all orders of "banu@gmail.com"
+
+3) GET
+
+	 http://localhost:8080/api/products?low=1000&high=5000
+
+	 get products whose price is between 1000 and 5000
+
+	 http://localhost:8080/api/products?page=1&size=20
+
+	 get 20 records from page "1"
+
+	 use "query parameter [ ? ]" for getting sub-set
+=====
+
+Http Header
+Content-type: application/json
+
+4) POST
+	http://localhost:8080/api/products
+
+	payload contains new "product data" to be added to "products" resources
+
+
+5) PUT
+		http://localhost:8080/api/products/3
+
+		payload contains new "product info for product with id 3" to be updated in "products" resources
+
+========
+
+6) DELETE
+		http://localhost:8080/api/products/3
+
+		delete product whose id is 3
+
+CRUD and HTTP
+
+CREATE ==> POST
+READ ==> GET
+UPDATE ==> PUT / PATCH
+DELETE ==> DELETE
+
+==
+
+GET and DELETE has no payload; these 2 are IDEMPOTENT methods ==> Safe methods
+
+PUT, PATCH and POST contains payload; not IDEMPOTENT methods ==> Not safe
+
+Assume PUT is banking transaction
+
+{
+	"type": credit,
+	"amount": 5000,
+	"account" : "SB123"
+
+}
+
+=================
+
+
+Status Code:
+
+200 ==> OK
+201 ==> CREATED
+302 ==> REDIRECTION
+304 ==> Not Modified
+400 ==> BAD REQUEST
+401 ==> Unauthorized
+404 ==> Resource not Found
+500 ==> Internal server error
+
+===========
+Tasks:
+1) Delete Product
+2) CustomerController
+
+==================
+
+http://localhost:8080/api/products?low=1000&high=50000
+
+ @GetMapping()
+	public @ResponseBody List<Product> getProducts(@RequestParam(name="low", defaultValue = "0.0") double low,
+			@RequestParam(name="high", defaultValue = "0.0") double high) {
+		if(low != 0.0 && high != 0.0) {
+			return service.byRange(low, high);
+		}
+		return service.getProducts();
+		
+	}
+
+========
+
+
+Order JSON:
+Placiong ORder:
+
+POST:  http://localhost:8080/api/orders
+body:
+{
+	"customer" : {
+		"email" : "sam@sg.com"
+	},
+	"items": [
+		{
+			"product" : {"id": 6}, "qty": 1
+		},
+		{
+			"product" : {"id": 2}, "qty": 3
+		}
+	]
+}
+
+
+
+
+
 

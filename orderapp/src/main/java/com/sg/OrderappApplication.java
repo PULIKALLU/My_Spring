@@ -23,20 +23,17 @@ public class OrderappApplication implements CommandLineRunner {
 	// this method gets called once Spring container is created and initialized
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("******  Add Product **********");
+//		System.out.println("******  Add Product **********");
 //		addProduct();
-		System.out.println("******  Get Products **********");
+//		System.out.println("******  Get Products **********");
 //		getProducts();
-		System.out.println("******  Get Product by Id **********");
+//		System.out.println("******  Get Product by Id **********");
 //		getById();
-		
-		System.out.println("Get Customer by email");
+//		System.out.println("Get Customer by email");
 //		customerByEmail();
-		
 //		service.testLazy();
-		
 //		customQuery();
-		modify();
+//		modify();
 	}
 
 	private void modify() {
