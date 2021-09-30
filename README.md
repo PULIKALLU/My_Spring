@@ -1322,5 +1322,201 @@ Caching on MiddleTier
 
 docker run --name my-redis –p 6379:6379  -d redis
 
-==============
+====================================
+
+To use Caching
+
+1) 
+	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+	</dependency>
+
+2) @EnableCaching in any @Configuration class
+Enables Springs annotation driven cache management cabilities
+
+By default Spring boot provides ConcurrentHashMap CacheImplmentation
+
+3)
+	@Cacheable(value="productCache", key ="#id")
+	@GetMapping("/{pid}")
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody Product getProduct(@PathVariable("pid") int id) throws NotFoundException {
+		try {
+			return service.getProduct(id);
+		} catch (NoSuchElementException e) {
+			throw new NotFoundException("Product with " + id + " doesn't exist!!!");
+		}
+	}
+
+==
+	@Cacheable(value="productCache", key ="#p.id")
+	@PostMapping()
+	public  @ResponseBody Product addProduct(@RequestBody @Valid Product p) {
+	
+==
+
+Input conditions
+	@Cacheable(value="productCache", key ="#p.id", condition="#p.price < 50000")
+	@PostMapping()
+	public  @ResponseBody Product addProduct(@RequestBody @Valid Product p) {
+
+Output /result condition:
+
+	@Cacheable(value="productCache", key ="#id", unless"#result == null")
+	@GetMapping("/{pid}")
+	@ResponseStatus(value = HttpStatus.OK)
+	public @ResponseBody Product getProduct(@PathVariable("pid") int id) throws NotFoundException {
+
+===
+	update the cache
+	@CachePut(value="productCache",  key ="#id" )
+	@PutMapping("/{pid}")
+	public @ResponseBody Product updateProduct(@PathVariable("pid") int id, @RequestBody Product p) {
+		service.updateProduct(p.getPrice(), id);
+		return service.getProduct(id);
+	}
+
+==
+
+REmove from cache
+@CacheEvict(value="productCache",   key ="#id")
+@DeleteMapping("/{id}")
+public String deleteProduct(@PathVariable("id") int id) {
+	...
+}
+
+===
+http://localhost:8080/api/products/clear
+
+Remove all items from Cache
+@CacheEvict(value="productCache",   allEntries = true)
+@GetMapping("/clear")
+public void clearAll() {
+}
+
+==
+
+@EnableScheduling
+@Scheduled(fixedRate = 1000)
+@CacheEvict(value="productCache",   allEntries = true)
+public void doTask() {
+		System.out.println("task done!!!");
+}
+
+===
+
+@Scheduled(cron = "0 0/30 * * * *") every half-hours
+
+@Scheduled(cron = "@hourly")
+public void doTask() {
+		System.out.println("task done!!!");
+}
+
+================
+
+@Autowired
+private CacheManager cacheManger;
+
+
+@Scheduled(fixedRate = 1000)
+public void doTask() {
+		for(String name: cacheManager.getCacheNames()) {
+			cacheManger.getCache(name).clear();
+		}
+}
+
+=====
+
+@EnableCaching
+@Cacheable
+@CachePut
+@CacheEvict
+
+==
+Using Redis as Cache Manager
+<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+
+package com.sg.prj.cfg;
+
+import java.time.Duration;
+
+import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
+
+@Configuration
+public class RedisCustomConfig {
+	
+	@Bean
+	public RedisCacheConfiguration cacheConfiguration() {
+		return RedisCacheConfiguration.defaultCacheConfig()
+				.entryTtl(Duration.ofMinutes(60))
+				.disableCachingNullValues()
+				.serializeValuesWith(SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+	}
+
+	@Bean
+	public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
+		return (builder) -> builder
+				.withCacheConfiguration("productCache",
+						RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(10)))
+				.withCacheConfiguration("customerCache",
+						RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(5)));
+	}
+
+}
+
+====
+
+
+
+Serializable is a mechansim used to write the state of object to a stream [ outside of JVM ] 
+* Redis should be running [ Docker]
+
+* If Nodejs is installed:
+To start redis client:
+npx redis-commander
+
+
+======================
+
+Spring Security
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
+Most of the configurations comes out of the box
+
+1) creates user by name "user" with
+Using generated security password: 2bee6472-57d6-4277-95c6-cc67873611d9
+
+2) comes with login and logout pages
+
+3) many filters are enabled for security
+
+http://localhost:8080/login
+http://localhost:8080/logout
+
+===
+
+Security is about:
+1) Authentication
+2) Authorization
+3) ExceptionHandling
+
+===============
+
+jdbcAuth.zip
+methodAuth.zip
+
+=================
 

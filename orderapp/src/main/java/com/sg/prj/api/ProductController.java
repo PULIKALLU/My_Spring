@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,10 +68,16 @@ public class ProductController {
 	// GET
 	// http://localhost:8080/api/products/3
 	// "3" is taken as PathVariable
-	@SwaggerEnabled()
+	@Cacheable(value = "productCache", key="#id")
 	@GetMapping("/{pid}")
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody Product getProduct(@PathVariable("pid") int id) throws NotFoundException {
+		System.out.println("Cache Miss!!!");
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		try {
 			return service.getProduct(id);
 		} catch (NoSuchElementException e) {
