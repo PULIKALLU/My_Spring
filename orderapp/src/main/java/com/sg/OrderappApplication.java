@@ -6,12 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import com.sg.prj.entity.Customer;
 import com.sg.prj.entity.Product;
@@ -19,6 +15,11 @@ import com.sg.prj.service.OrderService;
 
 @SpringBootApplication
 public class OrderappApplication implements CommandLineRunner {
+	
+	@Bean
+	public ShallowEtagHeaderFilter etag() {
+		return new  ShallowEtagHeaderFilter();
+	}
 	
 	@Autowired
 	private OrderService service;

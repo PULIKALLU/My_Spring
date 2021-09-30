@@ -1123,10 +1123,204 @@ AAA ==> Assemble Action and Assert
 * Hamcrest ==> good matchers for assertion
 * jsonpath ==> validating JSON [https://jsonpath.com/]
 
+==
+
+* Spring Container should not load all the beans only components required for testing
+
+@WebMvcTest(ProductController.class)
+
+loads  DispatcherTestServlet with ProductController only
+
+ MockMvc mockMvc; is used to make API calls GET / POST / PUT / DELETE
+
+ ==============
+	 <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+=========
+
+Day 3 Recap
+
+1) RestController, @RequestMapping, @Responsebody, @RequestBody, 
+@GetMapping(), @PostMapping(), @PutMapping(), @DeleteMapping()
+@PathVariable, @RequestParam
+
+2) RestTemplate
+	to consume REST api;
+	getForObject(), getForEntity(), exchange(), postForEntity(),
+	String result = template.getForObject("http://localhost:8080/api/products", String.class);
+
+	ResponseEntity<List<Product>> response = template.exchange("http://localhost:8080/api/products",
+				HttpMethod.GET, null , new ParameterizedTypeReference<List<Product>>() {
+				});
+
+3) Testing with Spring Boot 
+	spring-boot-starter-test dependency is included by default
+	* JUnit
+	* Mockito 
+	* Hamcrest provides matchers like : hasSize() hasItem()
+	* JsonPath to extract JSON information from payload
+			.andExpect(jsonPath("$", hasSize(2)))
+			.andExpect(jsonPath("$[0].id", is(1)))
+	* MockMvc bean to simulate API calls like get(), post() , ...
+	==> load only one controller which is under test; mock the beans which needs to be injected into Controller [ @Autowired]
+
+4) AOP
+5) Exception Handling using @ControllerAdvice and @Valid with input validation [ javax.validation.constraints ==> @Min, @Max, @NotBlank, @NotNull, @Pattern, @Past, @Future, ..]
+
+
+Day 4
+properites file
+spring.datasource.url=jdbc:mysql://localhost:3306/SG_SPRING?createDatabaseIfNotExist=true
+spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+
+YAML files
+spring.datasource
+	url=jdbc:mysql://localhost:3306/SG_SPRING?createDatabaseIfNotExist=true
+	driverClassName=com.mysql.cj.jdbc.Driver
+
+RESTful API Documentation
+1) RAML
+	RESTful API Modeling Language is a YAML-based language for describing RESTful APIs
+/songs:
+  description: Collection of available songs in Jukebox
+  get:
+    description: Get a list of songs based on the song title.
+    queryParameters:
+      songTitle:
+        description: "The title of the song to search (it is case insensitive and doesn't need to match the whole title)"
+        required: true
+        minLength: 3
+        type: string
+        example: "Get L"
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "songs": [
+                  {
+                    "songId": "550e8400-e29b-41d4-a716-446655440000",
+                    "songTitle": "Get Lucky"
+                  },
+                  {
+                    "songId": "550e8400-e29b-41d4-a716-446655440111",
+                    "songTitle": "Loose yourself to dance"
+                  },
+                  {
+                    "songId": "550e8400-e29b-41d4-a716-446655440222",
+                    "songTitle": "Gio sorgio by Moroder"
+                  }
+                ]
+              }
+2) OpenAPI / Swagger
+	Programmatic way of generating RESTful documents
+	The OpenAPI Specification, previously known as the Swagger Specification, is a specification for machine-readable interface files for describing, producing, consuming, and visualizing RESTful web services.
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
+@ApiOpertation
+@ApiParameter
+@Api
+
+======================================
+
+Caching
+
+1) Client side Caching
+	HttpHeaders 
+	a) Cache-Control
+
+	@GetMapping("/{pid}/cachecontrol")
+	@ResponseStatus(value = HttpStatus.OK)
+	public ResponseEntity<Product> getProductCache(@PathVariable("pid") int id) throws NotFoundException {
+		 return ResponseEntity.ok().cacheControl(CacheControl.maxAge(60, TimeUnit.MINUTES)).body(service.getProduct(id));
+	}
+
+	b) ETag
+
+	The ETag HTTP response header is an identifier for a specific version of a resource
+
+	Server sends ETag "numeric value of response data" to the Client
+
+	Next requests coming from client should have the In-None-Match header
+
+	Accept: application/json
+	In-None-Match: previous etag
+
+	REstful server fetches data from database, generates Etag, matches with Etag sent by client
+	if any changes then it sends the new data else SC 304 [ Not modified]
+
+
+	@Version
+	public int version;
+
+	introducese "version" column in database;
+	JPA automatically increments this column whenever data changes
+
+	can also be useful in avoiding data corruption
+
+	products
+	id   qty  version
+	12   299  1
+
+	User 1
+	productDao.findById(12);
+		purchases 3 products and needs to set qty to 297
+
+	User 2
+	productDao.findById(12);	
+		purchases 1products and needs to set qty to 299
+
+
+	User 2 sets it first
+		update products set qty = 299, version = version + 1 	where id = 12 and version 0
+
+
+	User 1 is setting
+		update products set qty = 297, version = version + 1 	where id = 12 and version 0
+		==> StateStateException
 
 
 
+===
+
+ETag "-1394764243"
 
 
+=============
 
+PostMan:
+
+1) GET http://localhost:8080/api/products/3/etag
+Accept: application/json
+
+Response gives ETag in Header
+
+2) GET http://localhost:8080/api/products/3/etag
+Accept: application/json
+If-None-Match : value of previous ETag
+
+Response will be 304 Not Modifed
+
+===
+
+Caching on MiddleTier
+
+
+docker run --name my-redis –p 6379:6379  -d redis
+
+==============
 

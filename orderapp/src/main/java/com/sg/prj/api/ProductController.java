@@ -2,10 +2,12 @@ package com.sg.prj.api;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sg.prj.entity.Product;
 import com.sg.prj.service.OrderService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("api/products")
+//@Api()
 public class ProductController {
 	@Autowired
 	private OrderService service;
@@ -33,6 +39,8 @@ public class ProductController {
 	// HttpMessageHandler to convert List<Product> to JSON / XML
 	// http://localhost:8080/api/products
 	//http://localhost:8080/api/products?low=1000&high=50000
+	@SwaggerEnabled()
+	@ApiOperation(value = "endpoint returns all the products",produces = "json")
 	@GetMapping()
 	public @ResponseBody List<Product> getProducts(@RequestParam(name="low", defaultValue = "0.0") double low,
 			@RequestParam(name="high", defaultValue = "0.0") double high) {
@@ -42,10 +50,24 @@ public class ProductController {
 		return service.getProducts();
 		
 	}
-
+	
+	@GetMapping("/{pid}/cachecontrol")
+	@ResponseStatus(value = HttpStatus.OK)
+	public ResponseEntity<Product> getProductCache(@PathVariable("pid") int id) throws NotFoundException {
+		 return ResponseEntity.ok().cacheControl(CacheControl.maxAge(60, TimeUnit.MINUTES)).body(service.getProduct(id));
+	}
+	
+	@GetMapping("/{pid}/etag")
+	@ResponseStatus(value = HttpStatus.OK)
+	public ResponseEntity<Product> getProductEtag(@PathVariable("pid") int id) throws NotFoundException {
+			Product p = service.getProduct(id);
+			return ResponseEntity.ok().eTag(String.valueOf(p.hashCode())).body(p);
+	}
+	
 	// GET
 	// http://localhost:8080/api/products/3
 	// "3" is taken as PathVariable
+	@SwaggerEnabled()
 	@GetMapping("/{pid}")
 	@ResponseStatus(value = HttpStatus.OK)
 	public @ResponseBody Product getProduct(@PathVariable("pid") int id) throws NotFoundException {
