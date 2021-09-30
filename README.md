@@ -1520,3 +1520,99 @@ methodAuth.zip
 
 =================
 
+1) All requests are intercepted by DelegatingProxyFilter
+2) UsernamePasswordAuthenticationFilter ==> attemptAuthenctication(request, response)
+3) this filter extracts username/password from request
+4) creates Authentication Object with principle/username, credentials, authorities[null], authenticated=false
+5) Authentication objects is passed on to AuthenticationManager
+6) AuthenticationManager connects AuthenticationProvider [ JdbcAuthentication, InMemory, Ldap, or custom]
+7) each of these providers has UserDetailsService implementation
+	UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+8) If User exists successfulAuthentication() of UsernamePasswordAuthenticationFilter is called
+9) UsernamePasswordAuthenticationFilter will now remove credentials from Authentication object adds authorities from UserDetails, set authenticated = true
+10) UsernamePasswordAuthenticationFilter stores Authentication Object in SecurityContext.
+11) subsequent requests made by clients uses SecurityContext to identity user / roles to allow access to resources
+
+======================
+
+Spring data jpa executes "schema.sql" and "data.sql" when application starts
+JDBC uses User Schema:
+https://docs.spring.io/spring-security/site/docs/4.2.x/reference/html/appendix-schema.html
+
+=================
+
+Security using JSESSIONID and SecurityContext ==> Stateful
+
+Cookies are for conversational state of client
+
+============
+
+RESTful should be Stateless 
+
+Recommended: use token based authentication
+JWT ==> Json Web Token
+
+==============================
+
+Token:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+Part 1 Header:
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+Part2 Payload:
+{
+  "sub": "who i am",
+  "name": "John Doe",
+  "iat": 1516239022, // issued at time,
+  "exp": 3434342, // expires
+  "iss" : "SG",
+  "authorities" : "ADMIN, USER"
+}
+
+Part 3 VERIFY SIGNATURE to validate token
+HMACSHA256(
+  base64UrlEncode(header) + "." +
+  base64UrlEncode(payload),
+  "TopSecret124XyZVerySecure"
+) 
+
+=====
+
+extract jwtExample.zip
+
+Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn0seyJhdXRob3JpdHkiOiJST0xFX1VTRVIifV0sImlhdCI6MTYzMjk5NTkyOSwiZXhwIjoxNjMzODA0MjAwfQ.bRJlFfmeh3moXNzAzG18fDwyAxQ3E8ATey0awSIaMdJalMiVsMeZF1DbOUUY_J93fW0ZL2yhi_7L-is5sd8t3A
+
+
+Refresh Token
+
+==========
+
+Postman:
+
+POST http://localhost:8080/login
+
+Headers
+Accept: application/json
+Content-type: application/json
+
+body:
+{
+	"username" : "admin",
+	"password" : "secret"
+}
+
+this sends Response Headers
+Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn0seyJhdXRob3JpdHkiOiJST0xFX1VTRVIifV0sImlhdCI6MTYzMjk5NTkyOSwiZXhwIjoxNjMzODA0MjAwfQ.bRJlFfmeh3moXNzAzG18fDwyAxQ3E8ATey0awSIaMdJalMiVsMeZF1DbOUUY_J93fW0ZL2yhi_7L-is5sd8t3A
+
+---
+GET http://localhost:8080/admin
+
+Headers:
+Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhvcml0aWVzIjpbeyJhdXRob3JpdHkiOiJST0xFX0FETUlOIn0seyJhdXRob3JpdHkiOiJST0xFX1VTRVIifV0sImlhdCI6MTYzMjk5NTkyOSwiZXhwIjoxNjMzODA0MjAwfQ.bRJlFfmeh3moXNzAzG18fDwyAxQ3E8ATey0awSIaMdJalMiVsMeZF1DbOUUY_J93fW0ZL2yhi_7L-is5sd8t3A
+
+==========================================
+
